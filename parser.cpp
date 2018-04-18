@@ -5,6 +5,8 @@
 #include "globals.h"
 #include <iomanip>  //setw
 
+//testing
+
 using namespace std;
 //fstream coutfile(outputFile, ios_base::app);
 //vector<string> allWords;
