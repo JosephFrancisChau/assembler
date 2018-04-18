@@ -4,7 +4,6 @@ void Rat18S(Token token, unsigned index) {
 
 	PrintRule(1);
 	fstream coutfile(outputFile, ios_base::app);
-	Token token = lexer(allWords.at(++index));
 	cout << left << setw(10) << "Token:" << token.type << "\t\t" << token.value << endl;
 	coutfile << left << setw(10) << token.type << "\t\t" << token.value << endl;
 	coutfile.close();
