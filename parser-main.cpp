@@ -38,6 +38,7 @@ int main(int argc, const char * argv[]) {
                     allWords.push_back(vec.at(i));
 			}
 		}
+		allWords.push_back("$");	//push "$" after reading in all the words
 		
 		//test the new code on allWords works or nor
 		for (unsigned i = 0; i < allWords.size(); ++i) {
