@@ -10,10 +10,11 @@ void Rat18S(Token token, unsigned index) {
 	coutfile.close();
 
 	if (token.value == "%%") {
-		OptDeclarationList(token);
-		Token temp = lexer(allWords.at(++index));
-		StatementList(temp);
+		Token temp1 = lexer(allWords.at(++index));
+		OptDeclarationList(temp1);
+		Token temp2 = lexer(allWords.at(++index));
+		StatementList(temp2);
 	}
 	else Error();
-	if (token.value != "$") Error(); //need your help
+	if (token.value != "$") Error();
 }
