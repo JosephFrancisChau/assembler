@@ -1,0 +1,19 @@
+//old : R1: <Rat18S> → <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
+//new:  R1: <Rat18S> → %% <Opt Declaration List> <Statement List>
+void Rat18S(Token token, unsigned index) {
+
+	PrintRule(1);
+	fstream coutfile(outputFile, ios_base::app);
+	Token token = lexer(allWords.at(++index));
+	cout << left << setw(10) << "Token:" << token.type << "\t\t" << token.value << endl;
+	coutfile << left << setw(10) << token.type << "\t\t" << token.value << endl;
+	coutfile.close();
+
+	if (token.value == "%%") {
+		OptDeclarationList(token);
+		Token temp = lexer(allWords.at(++index));
+		StatementList(temp);
+	}
+	else Error();
+	if (token.value != "$") Error(); //need your help
+}
