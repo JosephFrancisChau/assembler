@@ -33,6 +33,12 @@ void PrintToken(bool doit) {
 		coutfile.close();
 	}
 }
+void NextToken() {
+	if (tokenIndex < allWords.size() ){
+		token = lexer(allWords.at(++tokenIndex));
+		PrintToken(true);
+	}
+}
 
 //old : R1: <Rat18S> → <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
 //new:  R1: <Rat18S> → %% <Opt Declaration List> <Statement List>
@@ -41,8 +47,7 @@ void Rat18S() {
 	PrintRule(1);
 
 	if (token.value == "%%") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		OptDeclarationList();
 		StatementList();
 	}
@@ -77,8 +82,7 @@ void ParameterListP() {
 		Empty();
 	}
 	if (token.value == ",") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		ParameterList();
 	}
 }
@@ -90,8 +94,7 @@ void Parameter() {
 	//token = lexer(allWords.at(++tokenIndex));
 	//PrintToken(true);
 	if (token.value == ":") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		Qualifier();
 	}
 	else Error();
@@ -102,8 +105,7 @@ void Qualifier() {
 	PrintRule(10);
 
 	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 	}
 	else Error();
 }
@@ -112,14 +114,10 @@ void Qualifier() {
 void Body() {
 	PrintRule(11);
 	if (token.value == "{") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		StatementList();
-		//token = lexer(allWords.at(++tokenIndex));
-		//PrintToken(true);
 		if (token.value == "}") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 		}
 		else Error();
 	}
@@ -142,8 +140,7 @@ void DeclarationList() {
 	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
 		Declaration();
 		if (token.value == ";") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			DeclarationListP();
 		}
 		else
@@ -175,8 +172,7 @@ void Declaration() {
 //R16: <IDs> → <Identifier> <IDs’>
 void IDs() {
 	PrintRule(16);
-	token = lexer(allWords.at(++tokenIndex));
-	PrintToken(true);
+	NextToken();
 	IDsP();
 }
 
@@ -188,8 +184,7 @@ void IDsP() {
 	}
 	else {
 		if (token.value == ",") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			IDs();
 		}
 		else Error();
@@ -260,14 +255,10 @@ void Statement() {
 void Compound() {
 	PrintRule(21);
 	if (token.value == "{") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		StatementList();
-		//token = lexer(allWords.at(++tokenIndex));
-		//PrintToken(true);
 		if (token.value == "}") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 		}
 		else Error();
 	}
@@ -278,14 +269,10 @@ void Compound() {
 void Assign() {
 	PrintRule(22);
 	if (token.type == "identifier") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		if (token.value == "=") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			Expression();
-			//token = lexer(allWords.at(++tokenIndex));
-			//PrintToken(true);
 			if (token.value == ";") {
 				token = lexer(allWords.at(++tokenIndex));
 				PrintToken(true);
@@ -304,24 +291,17 @@ void Assign() {
 void If() {
 	PrintRule(23);
 	if (token.value == "if") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		if (token.value == "(") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			Condition();
-			//token = lexer(allWords.at(++tokenIndex));
-			//PrintToken(true);
 			if (token.value == ")") {
-				token = lexer(allWords.at(++tokenIndex));
-				PrintToken(true);
+				NextToken();
 				Statement();
 				IfP();
-				token = lexer(allWords.at(++tokenIndex));
-				PrintToken(true);
+				NextToken();
 				if (token.value == "endif") {
-					token = lexer(allWords.at(++tokenIndex));
-					PrintToken(true);
+					NextToken();
 				}
 				else
 					Error();
@@ -339,8 +319,7 @@ void IfP() {
 	}
 	else {
 		if (token.value == "else") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			Statement();
 		}
 		else
@@ -352,14 +331,10 @@ void IfP() {
 void Return() {
 	PrintRule(25);
 	if (token.value == "return") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		ReturnP();
-		//token = lexer(allWords.at(++tokenIndex));
-		//PrintToken(true);
 		if (token.value == ";") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 		}
 		else
 			Error();
@@ -383,20 +358,14 @@ void ReturnP() {
 void Print() {
 	PrintRule(27);
 	if (token.value == "put") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		if (token.value == "(") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			Expression();
-			//token = lexer(allWords.at(++tokenIndex));
-			//PrintToken(true);
 			if (token.value == ")") {
-				token = lexer(allWords.at(++tokenIndex));
-				PrintToken(true);
+				NextToken();
 				if (token.type == ";") {
-					token = lexer(allWords.at(++tokenIndex));
-					PrintToken(true);
+					NextToken();
 				}
 				else Error();
 			}
@@ -411,20 +380,14 @@ void Print() {
 void Scan() {
 	PrintRule(28);
 	if (token.value == "get") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		if (token.value == "(") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			IDs();
-			//token = lexer(allWords.at(++tokenIndex));
-			//PrintToken(true);
 			if (token.value == ")") {
-				token = lexer(allWords.at(++tokenIndex));
-				PrintToken(true);
+				NextToken();
 				if (token.value == ";") {
-					token = lexer(allWords.at(++tokenIndex));
-					PrintToken(true);
+					NextToken();
 				}
 				else Error();
 			}
@@ -439,17 +402,12 @@ void Scan() {
 void While() {
 	PrintRule(29);
 	if (token.value == "while") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		if (token.value == "(") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			Condition();
-			//token = lexer(allWords.at(++tokenIndex));
-			//PrintToken(true);
 			if (token.value == ")") {
-				token = lexer(allWords.at(++tokenIndex));
-				PrintToken(true);
+				NextToken();
 				Statement();
 			}
 			else Error();
@@ -472,8 +430,7 @@ void Relop() {
 	PrintRule(31);
 	if (token.value == "==" || token.value == "^=" || token.value == ">" ||
 		token.value == "<" || token.value == "=>" || token.value == "=<") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 	}
 	else Error();
 }
@@ -488,16 +445,12 @@ void Expression() {
 //R33: <Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | 𝜀
 void ExpressionP() {
 	PrintRule(33);
-	if (token.type == "Not Token" || token.type == "COMMENT") {
-		Empty();
-	}
-	else if (token.value == "+" || token.value == "-") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+	if (token.value == "+" || token.value == "-") {
+		NextToken();
 		Term();
 		ExpressionP();
 	}
-	else Error();
+	else Empty();
 }
 
 //R34: <Term> → <Factor> <Term’>
@@ -510,24 +463,19 @@ void Term() {
 //R35: <Term’> → * <Factor> <Term’> | / <Factor> <Term’> | 𝜀
 void TermP() {
 	PrintRule(35);
-	if (token.type == "Not Token" || token.type == "COMMENT") {
-		Empty();
-	}
-	else if (token.value == "*" || token.value == "/") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+	if  (token.value == "*" || token.value == "/") {
+		NextToken();
 		Factor();
 		TermP();
 	}
-	else Error();
+	else Empty();
 }
 
 //R36: <Factor> → - <Primary> | <Primary>
 void Factor() {
 	PrintRule(36);
 	if (token.value == "-") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		Primary();
 	}
 	else {
@@ -539,15 +487,12 @@ void Factor() {
 void Primary() {
 	PrintRule(37);
 	if (token.type == "identifier") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		if (token.value == "[") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 			IDs();
 			if (token.type == "]") {
-				token = lexer(allWords.at(++tokenIndex));
-				PrintToken(true);
+				NextToken();
 			}
 			else
 				Error();
@@ -560,14 +505,10 @@ void Primary() {
 		Integer();
 	}
 	else if (token.value == "(") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 		Expression();
-		//token = lexer(allWords.at(++tokenIndex));
-		//PrintToken(true);
 		if (token.value == ")") {
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			NextToken();
 		}
 		else Error();
 	}
@@ -575,8 +516,7 @@ void Primary() {
 		Real();
 	}
 	else if (token.value == "true" || token.value == "false") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 	}
 	else Error();
 }
@@ -712,16 +652,14 @@ void PrintRule(int ruleNum) {
 
 void Real() {
 	if (token.type == "real") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 	}
 	else Error();
 }
 
 void Integer() {
 	if (token.type == "integer") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		NextToken();
 	}
 	else Error();
 }
