@@ -9,4 +9,4 @@ struct Token {
 };
 
 vector<string> splitWord(string& word);
-Token lexer(string& word);
+Token lexer(string& word); 
