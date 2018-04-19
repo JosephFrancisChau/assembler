@@ -1,72 +1,61 @@
 #pragma once
-#pragma once
-#include <stdio.h>
 #include <fstream>
 #include <iostream>
 #include "lexer.h"
 #include "globals.h"
 
-void Parser(Token token, unsigned tokenIndex);
-
+void Parser(vector<string> vec);
 void Error();
+void PrintToken();
+void PrintRule(int ruleNum);
 
 //R1: <Rat18S> → <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
-void Rat18S(Token token, unsigned tokenIndex);
+void Rat18S();
 
-//R2: <Opt Function Definitions> → <Function Definitions> | <Empty>
-void OptFunctionDefinitions();
-
-//R3: <Function Definitions> → <Function> <Function Definitions’>
-void FunctionDefinitions();
-
-//R4: <Function Definitions’> → <Function Definitions> |  𝜀
-void FunctionDefinitionsP(Token t);
-
-//R5: <Function> → function <Identifier> [<Opt Parameter List>] <Opt Declaration List> <Body>
-void Function();
 //R6: <Opt Parameter List> → <Parameter List> | <Empty>
-void OptParameterList(Token t);
+void OptParameterList();
 
 //R7: <Parameter List> → <Parameter> <Parameter List’>
-void ParameterList(Token t);
+void ParameterList();
 
 //R8: <Parameter List’> → , <Parameter List> |  𝜀
-void ParameterListP(Token t);
+void ParameterListP();
 
 //R9: <Parameter> → <IDs> : <Qualifier>
-void Parameter(Token t);
+void Parameter();
 
 //R10: <Qualifier> → int | boolean | real
-void Qualifier(Token t);
+void Qualifier();
 
 //R11:    <Body> → { <Statement List> }
-void Body(Token t);
+void Body();
 
 //R12: <Opt Declaration List> → <Declaration List> | <Empty>
-void OptDeclarationList(Token t);
+void OptDeclarationList();
 
 //R13: <Declaration List> → <Declaration> ; <Declaration List’>
 void DeclarationList();
 
 //R14: <Declaration List’> → <Declaration List> | <Empty>
-void DeclarationListP(Token t);
+void DeclarationListP();
 
 //R15: <Declaration> → <Qualifier> <IDs>
 void Declaration();
 
 //R16: <IDs> → <Identifier> <IDs’>
-void IDs(Token t);
+void IDs();
 
 //R17: <IDs’> → , <IDs> | <Empty>
-void IDsP(Token t);
+void IDsP();
 
 //R18: <Statement List> → <Statement> <Statement List’>
-void StatementList(Token t);
+void StatementList();
 
 //R19: <Statement List’> → <Statement List> | <Empty>
-void StatementListP(Token t);
+void StatementListP();
+
 //R20: <Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
-void Statement(Token t);
+void Statement();
 
 //R21: <Compound> → { <Statement List> }
 void Compound();
@@ -78,16 +67,17 @@ void Assign();
 void If();
 
 //R24: <If’> → else <Statement> | <Empty>
-void IfP(Token t);
+void IfP();
 
 //R25: <Return> → return <Return’> ;
 void Return();
 
 //R26: <Return’> → <Expression> | 𝜀
-void ReturnP(Token t);
+void ReturnP();
 
 //R27: <Print> → put (<Expression>);
 void Print();
+
 //R28: <Scan> → get(<IDs>);
 void Scan();
 
@@ -95,37 +85,36 @@ void Scan();
 void While();
 
 //R30: <Condition> → <Expression> <Relop> <Expression>
-void Condition(Token t);
+void Condition();
 
 //R31: <Relop> → == | ^= | > | < | => | =<
-void Relop(Token t);
+void Relop();
 
 //R32: <Expression> → <Term> <Expression’>
-void Expression(Token t);
+void Expression();
 
 //R33: <Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | 𝜀
-void ExpressionP(Token t);
+void ExpressionP();
+
 //R34: <Term> → <Factor> <Term’>
-void Term(Token t);
+void Term();
 
 //R35: <Term’> → * <Factor> <Term’> | / <Factor> <Term’> | 𝜀
-void TermP(Token t);
+void TermP();
 
 //R36: <Factor> → - <Primary> | <Primary>
-void Factor(Token t);
+void Factor();
 
 //R37: <Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
-void Primary(Token t);
+void Primary();
+
 //R38: <Empty> → 𝜀
 void Empty();
 
-void PrintRule(int ruleNum);
-
-void Identifier(Token temp);
-
+void Identifier();
 void Integer();
-
 void Real();
+
 
 
 //#endif /* parser_h */
