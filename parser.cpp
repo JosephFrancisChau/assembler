@@ -56,12 +56,14 @@ void Rat18S() {
 //R6: <Opt Parameter List> → <Parameter List> | <Empty>
 void OptParameterList() {
 	PrintRule(6);
-	if (token.type == "NotToken" || token.type == "COMMENT") {
-		Empty();
-	}
-	else {
+	if (token.type == "identifier") {
 		ParameterList();
 	}
+	else if (token.value == "]") {
+		Empty();
+	}
+	else
+		Error();
 }
 
 //R7: <Parameter List> → <Parameter> <Parameter List’>
@@ -88,8 +90,8 @@ void ParameterListP() {
 void Parameter() {
 	PrintRule(9);
 	IDs();
-	token = lexer(allWords.at(++tokenIndex));
-	PrintToken(true);
+	//token = lexer(allWords.at(++tokenIndex));
+	//PrintToken(true);
 	if (token.value == ":") {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
@@ -116,8 +118,8 @@ void Body() {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
 		StatementList();
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		//token = lexer(allWords.at(++tokenIndex));
+		//PrintToken(true);
 		if (token.value == "}") {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
@@ -130,7 +132,7 @@ void Body() {
 //R12: <Opt Declaration List> → <Declaration List> | <Empty>
 void OptDeclarationList() {
 	PrintRule(12);
-	
+
 	if (token.type == "NotToken" || token.type == "COMMENT") {
 		Empty();
 	}
@@ -142,11 +144,11 @@ void OptDeclarationList() {
 //R13: <Declaration List> → <Declaration> ; <Declaration List’>
 void DeclarationList() {
 	PrintRule(13);
-	
+
 	Declaration();
 
-	token = lexer(allWords.at(++tokenIndex));
-	PrintToken(true);
+	//token = lexer(allWords.at(++tokenIndex));
+	//PrintToken(true);
 	if (token.value == ";") {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
@@ -159,7 +161,7 @@ void DeclarationList() {
 //R14: <Declaration List’> → <Declaration List> | <Empty>
 void DeclarationListP() {
 	PrintRule(14);
-	
+
 	if (token.type == "NotToken" || token.type == "COMMENT") {
 		Empty();
 	}
@@ -171,7 +173,6 @@ void DeclarationListP() {
 //R15: <Declaration> → <Qualifier> <IDs>
 void Declaration() {
 	PrintRule(15);
-
 	Qualifier();
 	IDs();
 }
@@ -179,7 +180,8 @@ void Declaration() {
 //R16: <IDs> → <Identifier> <IDs’>
 void IDs() {
 	PrintRule(16);
-	Identifier();
+	token = lexer(allWords.at(++tokenIndex));
+	PrintToken(true);
 	IDsP();
 }
 
@@ -266,8 +268,8 @@ void Compound() {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
 		StatementList();
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		//token = lexer(allWords.at(++tokenIndex));
+		//PrintToken(true);
 		if (token.value == "}") {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
@@ -280,19 +282,24 @@ void Compound() {
 //R22: <Assign> → <Identifier> = <Expression> ;
 void Assign() {
 	PrintRule(22);
-	Identifier();
-	token = lexer(allWords.at(++tokenIndex));
-	PrintToken(true);
-	if (token.value == "=") {
+	if (token.type == "identifier") {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
-		Expression();
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
-		if (token.value == ";") {
+		if (token.value == "=") {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
+			Expression();
+			//token = lexer(allWords.at(++tokenIndex));
+			//PrintToken(true);
+			if (token.value == ";") {
+				token = lexer(allWords.at(++tokenIndex));
+				PrintToken(true);
+			}
+			else
+				Error();
 		}
+		else
+			Error();
 	}
 	else
 		Error();
@@ -308,8 +315,8 @@ void If() {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
 			Condition();
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			//token = lexer(allWords.at(++tokenIndex));
+			//PrintToken(true);
 			if (token.value == ")") {
 				token = lexer(allWords.at(++tokenIndex));
 				PrintToken(true);
@@ -353,8 +360,8 @@ void Return() {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
 		ReturnP();
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		//token = lexer(allWords.at(++tokenIndex));
+		//PrintToken(true);
 		if (token.value == ";") {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
@@ -387,8 +394,8 @@ void Print() {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
 			Expression();
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			//token = lexer(allWords.at(++tokenIndex));
+			//PrintToken(true);
 			if (token.value == ")") {
 				token = lexer(allWords.at(++tokenIndex));
 				PrintToken(true);
@@ -415,8 +422,8 @@ void Scan() {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
 			IDs();
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			//token = lexer(allWords.at(++tokenIndex));
+			//PrintToken(true);
 			if (token.value == ")") {
 				token = lexer(allWords.at(++tokenIndex));
 				PrintToken(true);
@@ -443,8 +450,8 @@ void While() {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
 			Condition();
-			token = lexer(allWords.at(++tokenIndex));
-			PrintToken(true);
+			//token = lexer(allWords.at(++tokenIndex));
+			//PrintToken(true);
 			if (token.value == ")") {
 				token = lexer(allWords.at(++tokenIndex));
 				PrintToken(true);
@@ -537,7 +544,22 @@ void Factor() {
 void Primary() {
 	PrintRule(37);
 	if (token.type == "identifier") {
-		Identifier();
+		token = lexer(allWords.at(++tokenIndex));
+		PrintToken(true);
+		if (token.value == "[") {
+			token = lexer(allWords.at(++tokenIndex));
+			PrintToken(true);
+			IDs();
+			if (token.type == "]") {
+				token = lexer(allWords.at(++tokenIndex));
+				PrintToken(true);
+			}
+			else
+				Error();
+		}
+		else {
+
+		}
 	}
 	else if (token.type == "integer") {
 		Integer();
@@ -546,8 +568,8 @@ void Primary() {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
 		Expression();
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
+		//token = lexer(allWords.at(++tokenIndex));
+		//PrintToken(true);
 		if (token.value == ")") {
 			token = lexer(allWords.at(++tokenIndex));
 			PrintToken(true);
@@ -691,14 +713,6 @@ void PrintRule(int ruleNum) {
 		break;
 	}
 	coutfile.close();
-}
-
-void Identifier() {
-	if (token.type == "identifier") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
-	}
-	else Error();
 }
 
 void Real() {
