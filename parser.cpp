@@ -1,4 +1,4 @@
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "parser.h"
 #include "lexer.h"
 #include <fstream>
@@ -59,11 +59,8 @@ void OptParameterList() {
 	if (token.type == "identifier") {
 		ParameterList();
 	}
-	else if (token.value == "]") {
-		Empty();
-	}
 	else
-		Error();
+		Empty();
 }
 
 //R7: <Parameter List> → <Parameter> <Parameter List’>
@@ -103,9 +100,9 @@ void Parameter() {
 //R10: <Qualifier> → int | boolean | real
 void Qualifier() {
 	PrintRule(10);
-	
-	if (token.value == "int" || token.value == "boolean" || token.value == "real") { 
-		token = lexer(allWords.at(++tokenIndex)); 
+
+	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
+		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
 	}
 	else Error();
@@ -132,28 +129,27 @@ void Body() {
 //R12: <Opt Declaration List> → <Declaration List> | <Empty>
 void OptDeclarationList() {
 	PrintRule(12);
-
-	if (token.type == "NotToken" || token.type == "COMMENT") {
-		Empty();
-	}
-	else {
+	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
 		DeclarationList();
 	}
+	else
+		Empty();
 }
 
 //R13: <Declaration List> → <Declaration> ; <Declaration List’>
 void DeclarationList() {
 	PrintRule(13);
-
-	Declaration();
-
-	//token = lexer(allWords.at(++tokenIndex));
-	//PrintToken(true);
-	if (token.value == ";") {
-		token = lexer(allWords.at(++tokenIndex));
-		PrintToken(true);
-		DeclarationListP();
+	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
+		Declaration();
+		if (token.value == ";") {
+			token = lexer(allWords.at(++tokenIndex));
+			PrintToken(true);
+			DeclarationListP();
+		}
+		else
+			Error();
 	}
+	
 	else
 		Error();
 }
@@ -162,12 +158,11 @@ void DeclarationList() {
 void DeclarationListP() {
 	PrintRule(14);
 
-	if (token.type == "NotToken" || token.type == "COMMENT") {
-		Empty();
-	}
-	else {
+	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
 		DeclarationList();
 	}
+	else
+		Empty();
 }
 
 //R15: <Declaration> → <Qualifier> <IDs>
@@ -217,7 +212,7 @@ void StatementListP() {
 	else {
 		StatementList();
 	}
-	
+
 }
 
 //R20: <Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
