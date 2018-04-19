@@ -6,7 +6,8 @@
 
 void Parser(vector<string> vec);
 void Error();
-void PrintToken();
+void PrintToken(bool doit);
+void NextToken();
 void PrintRule(int ruleNum);
 
 //R1: <Rat18S> → <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
@@ -33,7 +34,7 @@ void Body();
 //R12: <Opt Declaration List> → <Declaration List> | <Empty>
 void OptDeclarationList();
 
-//R13: <Declaration List> → <Declaration> ; <Declaration List’>
+//R13:  <Declaration List> → <Declaration> ; <Declaration List’>
 void DeclarationList();
 
 //R14: <Declaration List’> → <Declaration List> | <Empty>
@@ -111,7 +112,7 @@ void Primary();
 //R38: <Empty> → 𝜀
 void Empty();
 
-void Identifier();
+//void Identifier();
 void Integer();
 void Real();
 
