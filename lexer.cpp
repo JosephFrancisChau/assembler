@@ -7,6 +7,7 @@
 //			Note (1) : If the word is not a legal token, the returned type is "NotToken".
 //          Note (2) : if the word is a comment, the returned type is "COMMENT"
 
+//#include "stdafx.h"
 #include "lexer.h"
 #include <iostream>
 #include <map>
@@ -40,17 +41,17 @@ Token lexer(string& word) {
 	//check "!"
 	if (word == "!") {
 		mytoken.type = "COMMENT";
-		if (comments.empty()) 	
+		if (comments.empty())
 			comments.push(word);
-		else {	
+		else {
 			while (!comments.empty()) {
 				comments.pop();
 			}
 		}
 		return mytoken;
 	}
-		
-	
+
+
 	else {
 		//check comment
 		if (!comments.empty()) {
@@ -58,7 +59,7 @@ Token lexer(string& word) {
 			mytoken.type = "COMMENT";
 			return mytoken;
 		}
-		//if first char is letter, then check keyword and identifer
+		//if first char is letter, then check keyword and identifier
 		if (isalpha(word[0])) {
 			bool isKeyword = false, isID = false;
 			//check keyword first
@@ -68,12 +69,12 @@ Token lexer(string& word) {
 				isKeyword = true;
 				mytoken.type = "keyword";
 			}
-			//check identifer
+			//check identifier
 			else {
 				if (len == 1) {
 					//isToken = true;
 					isID = true;
-					mytoken.type = "identifer";
+					mytoken.type = "identifier";
 				}
 				else {
 					isID = true;
@@ -82,7 +83,7 @@ Token lexer(string& word) {
 					}
 					isID = isID && ((word[len - 1] == '$') || isalpha(word[len - 1]));
 					if (isID) {
-						mytoken.type = "identifer";
+						mytoken.type = "identifier";
 					}
 				}
 			}
@@ -158,11 +159,11 @@ bool testDelimiter(string& word) {
 	size_t i;
 	set<string>::iterator it;
 	for (it = delimiters.begin(); it != delimiters.end(); ++it) {
-			if (word.find(*it) != string::npos) {
-				exist = true;
-				i = word.find(*it);
-				positions.insert(pair<size_t, size_t>(i, (*it).length()));
-			}
+		if (word.find(*it) != string::npos) {
+			exist = true;
+			i = word.find(*it);
+			positions.insert(pair<size_t, size_t>(i, (*it).length()));
+		}
 	}
 	if (!exist) cleanwords.push_back(word);
 	return exist;
@@ -173,7 +174,7 @@ vector<string> splitWord(string& word) {
 	string sub1, sub2, sub3;
 	size_t len, firstD;
 	cleanwords.clear();
-	
+
 	while (testDelimiter(word) && !word.empty()) {
 		p = positions.begin();
 		firstD = p->first;
@@ -183,22 +184,31 @@ vector<string> splitWord(string& word) {
 		if (firstD == 0) {
 			sub1 = word.substr(0, len);
 			sub2 = word.substr(len);
-			cleanwords.push_back(sub1);
+			cleanwords.push_back(sub1);	
+
+			//allWords.push_back(sub1);	//to creat allWords
 			word = sub2;
 		}
 		else if (firstD > 0 && firstD < word.length() - 1) {
 			sub1 = word.substr(0, firstD);
 			sub2 = word.substr(firstD, len);
 			sub3 = word.substr(firstD + len);
-			cleanwords.push_back(sub1);
+			cleanwords.push_back(sub1);	
 			cleanwords.push_back(sub2);
+
+			//allWords.push_back(sub1);	//to creat allWords
+			//allWords.push_back(sub2);	//to creat allWords
 			word = sub3;
 		}
 		else {
 			sub1 = word.substr(0, firstD);
 			sub2 = word.substr(firstD);
+
 			cleanwords.push_back(sub1);
 			cleanwords.push_back(sub2);
+
+			//allWords.push_back(sub1);	//to creat allWords
+			//allWords.push_back(sub2);	//to creat allWords
 			word.clear();
 		}
 	}
