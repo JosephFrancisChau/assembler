@@ -4,8 +4,6 @@
 #include <fstream>
 #include "globals.h"
 
-// Joseph Testing Git on Visual Studio, is it working?
-
 using namespace std;
 
 vector<string> allWords;
