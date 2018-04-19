@@ -1,20 +1,15 @@
 //#include "stdafx.h"
-#include "lexer.h"
 #include "globals.h"
+#include "lexer.h"
 #include "parser.h"
-#include <iomanip>  //setw
 
 using namespace std;
-vector<string> allWords;
+
 string outputFile;
-Token start;
-unsigned tokenIndex;
-//fstream coutfile(outputFile);
 
 int main(int argc, const char * argv[]) {
-	string inputFile, word, ofile;
-	//ifstream sourceFile;
-
+	string inputFile, word;
+	vector<string> allCleanWords;
 
 	//test sample source code
 	cout << "Enter test file name(format: filename.txt): ";
@@ -29,35 +24,24 @@ int main(int argc, const char * argv[]) {
 	ifstream sourceFile(inputFile);
 
 	if (sourceFile.is_open()) {
-		// call splitWord can create allWords
+		//creat allWords
 		while (sourceFile >> word) {
 			vector<string> vec = splitWord(word);
 			for (unsigned i = 0; i < vec.size(); ++i) {
-				//allWords.push_back(vec.at(i));
-                if(!vec.at(i).empty())
-                    allWords.push_back(vec.at(i));
+				if (!vec.at(i).empty())	
+					allCleanWords.push_back(vec.at(i));
 			}
 		}
-		allWords.push_back("$");	//push "$" after reading in all the words
+		allCleanWords.push_back("$");	//push "$" after read in all the words
 		
-		//test the new code on allWords works or nor
-		for (unsigned i = 0; i < allWords.size(); ++i) {
-			Token start = lexer(allWords.at(i));
-			cout << left << setw(10) << "Token:" << start.type << "\t\t" << "Lexeme: "<< start.value << endl;
-			coutfile << left << setw(10) << "Token:" << start.type << "\t\t" << "Lexeme: " << start.value << endl;
-			tokenIndex = i;
-			Parser(start, tokenIndex);
-			coutfile.close();
-		}	
-
-
+		Parser(allCleanWords);
 	}
 	else {
 		cout << "Can't open the file: " << inputFile << endl;
 	}
 
 	sourceFile.close();
-
-
+	coutfile.close();
+	//system("pause");
 	return 0;
 }
