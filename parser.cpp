@@ -4,6 +4,8 @@
 #include <fstream>
 #include "globals.h"
 
+//testing again
+
 using namespace std;
 
 vector<string> allWords;
