@@ -216,9 +216,10 @@ void StatementListP() {
 void Statement() {
 	PrintRule(20);
 	// Check if <Compound>
-	if (token.value == "{") {
+	if (token.value == "{" || token.value == "}") {
 		Compound();
 	}
+
 
 	// Check if <Assign>
 	else if (token.type == "identifier") {
@@ -256,13 +257,13 @@ void Statement() {
 //R21: <Compound> → { <Statement List> }
 void Compound() {
 	PrintRule(21);
-	if (token.value == "{") {
+	if (token.value == "{" || token.value == "}") {
 		NextToken();
 		StatementList();
-		if (token.value == "}") {
-			NextToken();
-		}
-		else Error();
+//		if (token.value == "}") {
+//			NextToken();
+//		}
+//		else Error();
 	}
 	else Error();
 }
@@ -277,6 +278,7 @@ void Assign() {
 			Expression();
 			if (token.value == ";") {
 				token = lexer(allWords.at(++tokenIndex));
+                //NextToken();
 				PrintToken(true);
 			}
 			else
@@ -366,7 +368,7 @@ void Print() {
 			Expression();
 			if (token.value == ")") {
 				NextToken();
-				if (token.type == ";") {
+				if (token.value == ";") {
 					NextToken();
 				}
 				else Error();
