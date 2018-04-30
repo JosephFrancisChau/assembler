@@ -10,6 +10,23 @@ void PrintToken(bool doit);
 void NextToken();
 void PrintRule(int ruleNum);
 
+struct Symbol {
+	unsigned addr;
+	string name;
+	string type;
+};
+struct Instr {
+	unsigned addr;
+	string optor;
+	string oprand;
+};
+struct Pair {
+	bool declared;
+	unsigned symbolIndex;
+};
+
+Pair checkID();
+void printSymbol();
 //R1: <Rat18S> → <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
 void Rat18S();
 
@@ -112,7 +129,7 @@ void Primary();
 //R38: <Empty> → 𝜀
 void Empty();
 
-//void Identifier();
+void Identifier();
 void Integer();
 void Real();
 
