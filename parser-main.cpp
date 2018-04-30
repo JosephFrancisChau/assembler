@@ -5,8 +5,6 @@
 
 using namespace std;
 
-//testing
-
 string outputFile;
 
 int main(int argc, const char * argv[]) {
@@ -42,8 +40,11 @@ int main(int argc, const char * argv[]) {
 		cout << "Can't open the file: " << inputFile << endl;
 	}
 
+	printSymbol();
+
 	sourceFile.close();
 	coutfile.close();
-	//system("pause");
+
+	system("pause");
 	return 0;
 }
