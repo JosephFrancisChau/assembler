@@ -3,15 +3,21 @@
 #include "lexer.h"
 #include <fstream>
 #include "globals.h"
-
-//testing again
-
+#include <stack>
+#include <vector>
+#include <map>
+#include <iomanip>      // std::setw
 using namespace std;
 
 vector<string> allWords;
 unsigned tokenIndex;
+unsigned memAddr = 1999;
 Token token;
 int ruleNum;
+string symbolType;
+stack<unsigned> jumpStack;
+vector<Symbol> symbolTable;	//stores token.value and memAddr
+vector<Instr> instrTable;	//stores 
 
 void Parser(vector<string> v) {
 	allWords = v;
@@ -35,8 +41,39 @@ void PrintToken(bool doit) {
 		coutfile.close();
 	}
 }
+
+void printSymbol() {
+	fstream coutfile(outputFile, ios_base::app);
+	coutfile.setf(ios::left);
+	coutfile << "\n\t\tSymbol Table" << endl;
+	coutfile << setw(10) << "ID" << setw(20) << "MemLoc" << setw(10)<< "Type" << endl;
+	coutfile.close();
+	for (unsigned i = 0; i < symbolTable.size(); ++i) {
+		fstream coutfile(outputFile, ios_base::app);
+		coutfile.setf(ios::left);
+		coutfile << setw(10) << symbolTable.at(i).name << setw(20) << symbolTable.at(i).type << setw(10) << symbolTable.at(i).addr << endl;
+		coutfile.close();
+	}
+}
+
+Pair checkID() {
+	Pair p;
+	p.declared = false;
+	p.symbolIndex = -1;
+	if (token.type == "identifier") {
+		//check an identifier is declared or not
+		for (unsigned i = 0; i < symbolTable.size(); ++i) {
+			if (symbolTable.at(i).name == token.value) {
+				p.declared = true;
+				p.symbolIndex = i;
+			}
+		}
+	}
+	return p;
+}
+
 void NextToken() {
-	if (tokenIndex < allWords.size() ){
+	if (tokenIndex < allWords.size()) {
 		token = lexer(allWords.at(++tokenIndex));
 		PrintToken(true);
 	}
@@ -107,6 +144,7 @@ void Qualifier() {
 	PrintRule(10);
 
 	if (token.value == "int" || token.value == "boolean" || token.value == "real") {
+		symbolType = token.value;
 		NextToken();
 	}
 	else Error();
@@ -148,7 +186,7 @@ void DeclarationList() {
 		else
 			Error();
 	}
-	
+
 	else
 		Error();
 }
@@ -168,13 +206,29 @@ void DeclarationListP() {
 void Declaration() {
 	PrintRule(15);
 	Qualifier();
+	
+	if (!checkID().declared) {
+		Symbol symbol;
+		++memAddr;
+		symbol.addr = memAddr;
+		symbol.name = token.value;
+		symbol.type = symbolType;
+		symbolTable.push_back(symbol);
+	}
+	else {
+		fstream coutfile(outputFile, ios_base::app);
+		coutfile << "Error! " << token.value << " is already declard!" << endl;
+		coutfile.close();
+		exit(0);
+	}
+	
 	IDs();
 }
 
 //R16: <IDs> → <Identifier> <IDs’>
 void IDs() {
 	PrintRule(16);
-	NextToken();
+	Identifier();
 	IDsP();
 }
 
@@ -187,6 +241,22 @@ void IDsP() {
 	else {
 		if (token.value == ",") {
 			NextToken();
+			
+			if (!checkID().declared) {
+				Symbol symbol;
+				++memAddr;
+				symbol.addr = memAddr;
+				symbol.name = token.value;
+				symbol.type = symbolType;
+				symbolTable.push_back(symbol);
+			}
+			else {
+				fstream coutfile(outputFile, ios_base::app);
+				coutfile << "Error! " << token.value << " is already declard!" << endl;
+				coutfile.close();
+				exit(0);
+			}
+			
 			IDs();
 		}
 		else Error();
@@ -260,25 +330,26 @@ void Compound() {
 	if (token.value == "{" || token.value == "}") {
 		NextToken();
 		StatementList();
-//		if (token.value == "}") {
-//			NextToken();
-//		}
-//		else Error();
+		//		if (token.value == "}") {
+		//			NextToken();
+		//		}
+		//		else Error();
 	}
 	else Error();
 }
 
 //R22: <Assign> → <Identifier> = <Expression> ;
 void Assign() {
+	Token save;
 	PrintRule(22);
 	if (token.type == "identifier") {
-		NextToken();
+		save = token;
+		Identifier();
 		if (token.value == "=") {
 			NextToken();
 			Expression();
 			if (token.value == ";") {
-				token = lexer(allWords.at(++tokenIndex));
-                //NextToken();
+				NextToken();
 				PrintToken(true);
 			}
 			else
@@ -460,6 +531,7 @@ void ExpressionP() {
 //R34: <Term> → <Factor> <Term’>
 void Term() {
 	PrintRule(34);
+	
 	Factor();
 	TermP();
 }
@@ -467,7 +539,7 @@ void Term() {
 //R35: <Term’> → * <Factor> <Term’> | / <Factor> <Term’> | 𝜀
 void TermP() {
 	PrintRule(35);
-	if  (token.value == "*" || token.value == "/") {
+	if (token.value == "*" || token.value == "/") {
 		NextToken();
 		Factor();
 		TermP();
@@ -491,7 +563,18 @@ void Factor() {
 void Primary() {
 	PrintRule(37);
 	if (token.type == "identifier") {
-		NextToken();
+
+		if (checkID().declared) {
+			//check type
+		}
+		else {
+			fstream coutfile(outputFile, ios_base::app);
+			coutfile << "Error! " << token.value << " is not declard!" << endl;
+			coutfile.close();
+			exit(0);
+		}
+
+		Identifier();
 		if (token.value == "[") {
 			NextToken();
 			IDs();
@@ -654,6 +737,13 @@ void PrintRule(int ruleNum) {
 	coutfile.close();
 }
 
+void Identifier() {
+	if (token.type == "identifier") {
+		NextToken();
+	}
+	else Error();
+}
+
 void Real() {
 	if (token.type == "real") {
 		NextToken();
@@ -667,3 +757,4 @@ void Integer() {
 	}
 	else Error();
 }
+
