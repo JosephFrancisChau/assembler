@@ -16,7 +16,7 @@ vector<Instr> instrTable;	//stores
 int tokenIndex;
 int memAddr = 1999;
 int ruleNum;
-int inst_address=0; // global variable for instruction address
+int inst_address = 1; // global variable for instruction address
 
 Token token;
 
