@@ -133,6 +133,6 @@ void Identifier();
 void Integer();
 void Real();
 
-
+void gen_instr(Instr op, Instr oprnd);
 
 //#endif /* parser_h */

@@ -10,14 +10,21 @@
 using namespace std;
 
 vector<string> allWords;
-unsigned tokenIndex;
-unsigned memAddr = 1999;
-Token token;
-int ruleNum;
-string symbolType;
-stack<unsigned> jumpStack;
 vector<Symbol> symbolTable;	//stores token.value and memAddr
-vector<Instr> instrTable;	//stores 
+vector<Instr> instrTable;	//stores
+
+int tokenIndex;
+int memAddr = 1999;
+int ruleNum;
+int inst_address=0; // global variable for instruction address
+
+Token token;
+
+string symbolType;
+
+stack<int> jumpStack;
+
+
 
 void Parser(vector<string> v) {
 	allWords = v;
@@ -48,10 +55,11 @@ void printSymbol() {
 	coutfile << "\n\t\tSymbol Table" << endl;
 	coutfile << setw(10) << "ID" << setw(20) << "MemLoc" << setw(10)<< "Type" << endl;
 	coutfile.close();
-	for (unsigned i = 0; i < symbolTable.size(); ++i) {
+	for (int i = 0; i < symbolTable.size(); ++i) {
 		fstream coutfile(outputFile, ios_base::app);
 		coutfile.setf(ios::left);
-		coutfile << setw(10) << symbolTable.at(i).name << setw(20) << symbolTable.at(i).type << setw(10) << symbolTable.at(i).addr << endl;
+		coutfile << setw(10) << symbolTable.at(i).name << setw(20) << symbolTable.at(i).type << setw(10)
+				 << symbolTable.at(i).addr << endl;
 		coutfile.close();
 	}
 }
@@ -62,7 +70,7 @@ Pair checkID() {
 	p.symbolIndex = -1;
 	if (token.type == "identifier") {
 		//check an identifier is declared or not
-		for (unsigned i = 0; i < symbolTable.size(); ++i) {
+		for (int i = 0; i < symbolTable.size(); ++i) {
 			if (symbolTable.at(i).name == token.value) {
 				p.declared = true;
 				p.symbolIndex = i;
@@ -758,3 +766,10 @@ void Integer() {
 	else Error();
 }
 
+void gen_instr(Instr op, Instr oprnd){
+	instr_table[instr_address].address = inst_address;
+	instr_table[instr_address].op = op;
+	instr_table[instr_address].oprnd = oprnd;
+	instrTable.push_back(instr_table[instr_address]);
+	instr_address++;
+}
