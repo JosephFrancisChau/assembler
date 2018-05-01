@@ -11,12 +11,12 @@ void NextToken();
 void PrintRule(int ruleNum);
 
 struct Symbol {
-	unsigned addr;
+	int addr;
 	string name;
 	string type;
 };
 struct Instr {
-	unsigned addr;
+	int addr;
 	string optor;
 	string oprand;
 };
@@ -133,6 +133,6 @@ void Identifier();
 void Integer();
 void Real();
 
-void gen_instr(Instr op, Instr oprnd);
+//void gen_instr(Instr op, Instr oprnd);
 
 //#endif /* parser_h */

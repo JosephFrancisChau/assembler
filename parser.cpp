@@ -766,10 +766,11 @@ void Integer() {
 	else Error();
 }
 
-void gen_instr(Instr op, Instr oprnd){
-	instr_table[instr_address].address = inst_address;
-	instr_table[instr_address].op = op;
-	instr_table[instr_address].oprnd = oprnd;
-	instrTable.push_back(instr_table[instr_address]);
-	instr_address++;
-}
+//void gen_instr(Instr op, Instr oprnd){
+//    Instr temp;
+//	temp.addr = inst_address;
+//	temp.optor = op;
+//	temp.oprand = oprnd;
+//	instrTable.push_back(temp);
+//	instr_address++;
+//}
