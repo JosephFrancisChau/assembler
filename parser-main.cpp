@@ -41,10 +41,9 @@ int main(int argc, const char * argv[]) {
 	}
 
 	printSymbol();
-
+	printInstr();
 	sourceFile.close();
 	coutfile.close();
 
-	system("pause");
 	return 0;
 }

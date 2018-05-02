@@ -27,6 +27,7 @@ struct Pair {
 
 Pair checkID();
 void printSymbol();
+void printInstr();
 //R1: <Rat18S> → <Opt Function Definitions> %% <Opt Declaration List> <Statement List>
 void Rat18S();
 
@@ -133,6 +134,6 @@ void Identifier();
 void Integer();
 void Real();
 
-//void gen_instr(Instr op, Instr oprnd);
+void gen_instr(string op, int oprnd);
 
 //#endif /* parser_h */

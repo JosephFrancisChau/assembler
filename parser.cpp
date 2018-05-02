@@ -16,7 +16,7 @@ vector<Instr> instrTable;	//stores
 int tokenIndex;
 int memAddr = 1999;
 int ruleNum;
-int inst_address = 1; // global variable for instruction address
+int instr_address = 1; // global variable for instruction address
 
 Token token;
 
@@ -53,7 +53,7 @@ void printSymbol() {
 	fstream coutfile(outputFile, ios_base::app);
 	coutfile.setf(ios::left);
 	coutfile << "\n\t\tSymbol Table" << endl;
-	coutfile << setw(10) << "ID" << setw(20) << "MemLoc" << setw(10)<< "Type" << endl;
+	coutfile << setw(10) << "ID" << setw(20) << "Type" << setw(10)<< "MemLoc" << endl;
 	coutfile.close();
 	for (int i = 0; i < symbolTable.size(); ++i) {
 		fstream coutfile(outputFile, ios_base::app);
@@ -62,6 +62,21 @@ void printSymbol() {
 				 << symbolTable.at(i).addr << endl;
 		coutfile.close();
 	}
+}
+
+void printInstr() {
+    fstream coutfile(outputFile, ios_base::app);
+    coutfile.setf(ios::left);
+    coutfile << "\n\t\tInstr Table" << endl;
+    coutfile << setw(10) << "Address" << setw(20) << "Op" << setw(10)<< "Oprnd" << endl;
+    coutfile.close();
+    for (int i = 0; i < instrTable.size(); ++i) {
+        fstream coutfile(outputFile, ios_base::app);
+        coutfile.setf(ios::left);
+        coutfile << setw(10) << instrTable.at(i).addr << setw(20) << instrTable.at(i).optor << setw(10)
+                 << instrTable.at(i).oprand << endl;
+        coutfile.close();
+    }
 }
 
 Pair checkID() {
@@ -348,7 +363,7 @@ void Compound() {
 
 //R22: <Assign> → <Identifier> = <Expression> ;
 void Assign() {
-	Token save;
+	Token save; // used to store previous token
 	PrintRule(22);
 	if (token.type == "identifier") {
 		save = token;
@@ -356,6 +371,14 @@ void Assign() {
 		if (token.value == "=") {
 			NextToken();
 			Expression();
+			int addr; // used to store address of identifier for instruction table
+            // Looping through symbol table vector looking for identifier value
+            for(int i = 0; i < symbolTable.size(); i++){
+                if(symbolTable.at(i).name == token.value){
+                    addr = symbolTable.at(i).addr;
+                }
+            }
+			gen_instr("POPM", addr);
 			if (token.value == ";") {
 				NextToken();
 				PrintToken(true);
@@ -766,11 +789,11 @@ void Integer() {
 	else Error();
 }
 
-//void gen_instr(Instr op, Instr oprnd){
-//    Instr temp;
-//	temp.addr = inst_address;
-//	temp.optor = op;
-//	temp.oprand = oprnd;
-//	instrTable.push_back(temp);
-//	instr_address++;
-//}
+void gen_instr(string op, int oprnd){
+    Instr temp = Instr();
+	temp.addr = instr_address;
+	temp.optor = op;
+	temp.oprand = oprnd;
+	instrTable.push_back(temp);
+	instr_address++;
+}
