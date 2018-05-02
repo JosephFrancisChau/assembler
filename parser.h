@@ -4,12 +4,6 @@
 #include "lexer.h"
 #include "globals.h"
 
-void Parser(vector<string> vec);
-void Error();
-void PrintToken(bool doit);
-void NextToken();
-void PrintRule(int ruleNum);
-
 struct Symbol {
 	int addr;
 	string name;
@@ -25,6 +19,13 @@ struct Pair {
 	bool declared;
 	unsigned symbolIndex;
 };
+
+void Parser(vector<string> vec);
+void Error();
+void PrintToken(bool doit);
+void NextToken();
+void PrintRule(int ruleNum);
+
 
 Pair checkID();
 void printSymbol();
@@ -85,9 +86,6 @@ void Assign();
 
 //R23: <If> → if ( <Condition> ) <Statement> <If’> endif
 void If();
-
-//R24: <If’> → else <Statement> | <Empty>
-void IfP();
 
 //R25: <Return> → return <Return’> ;
 void Return();
