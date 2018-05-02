@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "globals.h"
 #include "lexer.h"
 #include "parser.h"
@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
 	ifstream sourceFile(inputFile);
 
 	if (sourceFile.is_open()) {
-		//creat allWords
+		//create allWords
 		while (sourceFile >> word) {
 			vector<string> vec = splitWord(word);
 			for (unsigned i = 0; i < vec.size(); ++i) {

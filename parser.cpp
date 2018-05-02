@@ -7,19 +7,22 @@
 #include <vector>
 #include <map>
 #include <iomanip>      // std::setw
+#include <string>
 using namespace std;
 
 vector<string> allWords;
 vector<Symbol> symbolTable;	//stores token.value and memAddr
 vector<Instr> instrTable;	//stores
 
-unsigned tokenIndex;
+stack<int> jumpStack;
+
+
+int tokenIndex;
 int memAddr = 1999;
 int ruleNum;
 int instr_address = 1; // global variable for instruction address
 Token token;
 string symbolType;
-stack<int> jumpStack;
 
 void Parser(vector<string> v) {
 	allWords = v;
@@ -50,7 +53,7 @@ void printSymbol() {
 	coutfile << "\n\t\tSymbol Table" << endl;
 	coutfile << setw(10) << "ID" << setw(20) << "Type" << setw(10) << "MemLoc" << endl;
 	coutfile.close();
-	for (unsigned i = 0; i < symbolTable.size(); ++i) {
+	for (int i = 0; i < symbolTable.size(); ++i) {
 		fstream coutfile(outputFile, ios_base::app);
 		coutfile.setf(ios::left);
 		coutfile << setw(10) << symbolTable.at(i).name << setw(20) << symbolTable.at(i).type << setw(10)
@@ -65,7 +68,7 @@ void printInstr() {
 	coutfile << "\n\t\tInstr Table" << endl;
 	coutfile << setw(10) << "Address" << setw(20) << "Op" << setw(10) << "Oprnd" << endl;
 	coutfile.close();
-	for (unsigned i = 0; i < instrTable.size(); ++i) {
+	for (int i = 0; i < instrTable.size(); ++i) {
 		fstream coutfile(outputFile, ios_base::app);
 		coutfile.setf(ios::left);
 		coutfile << setw(10) << instrTable.at(i).addr << setw(20) << instrTable.at(i).optor << setw(10)
@@ -80,7 +83,7 @@ Pair checkID() {
 	p.symbolIndex = -1;
 	if (token.type == "identifier") {
 		//check an identifier is declared or not
-		for (unsigned i = 0; i < symbolTable.size(); ++i) {
+		for (int i = 0; i < symbolTable.size(); ++i) {
 			if (symbolTable.at(i).name == token.value) {
 				p.declared = true;
 				p.symbolIndex = i;
@@ -115,7 +118,7 @@ void Rat18S() {
 	else {
 		fstream coutfile(outputFile, ios_base::app);
 		coutfile.setf(ios::left);
-		coutfile << "\nFinished Parsring!" << endl;
+		coutfile << "\nFinished Parsing!" << endl;
 		coutfile.close();
 	}
 }
@@ -374,7 +377,7 @@ void Assign() {
 			Expression();
 			int addr; // used to store address of identifier for instruction table
 					  // Looping through symbol table vector looking for identifier value
-			for (unsigned i = 0; i < symbolTable.size(); i++) {
+			for (int i = 0; i < symbolTable.size(); i++) {
 				if (symbolTable.at(i).name == save.value) {
 					addr = symbolTable.at(i).addr;
 				}
@@ -657,9 +660,10 @@ void Primary() {
 		}
 		int addr; // used to store address of identifier for instruction table
 				  // Looping through symbol table vector looking for identifier value
-		for (unsigned i = 0; i < symbolTable.size(); i++) {
+		for (int i = 0; i < symbolTable.size(); i++) {
 			if (symbolTable.at(i).name == save.value) {
 				addr = symbolTable.at(i).addr;
+				continue;
 			}
 		}
 		gen_instr("PUSHM", addr);
@@ -842,6 +846,8 @@ void Real() {
 
 void Integer() {
 	if (token.type == "integer") {
+	    int temp = stoi(token.value);
+	    gen_instr("PUSHI", temp);
 		NextToken();
 	}
 	else Error();

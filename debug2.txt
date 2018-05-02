@@ -235,28 +235,31 @@ NotToken		$
 <Statement List’> → <Statement List> | e
 <Empty> → e
 
-Finished Parsring!
+Finished Parsing!
 
 		Instr Table
 Address   Op                  Oprnd     
-1         POPM                2002      
-2         POPM                2000      
-3         LABEL               0         
-4         PUSHM               2000      
-5         LES                 0         
-6         JUMPZ               0         
-7         PUSHM               19        
-8         PUSHM               2002      
-9         PUSHM               2000      
-10        ADD                 0         
-11        POPM                2002      
-12        PUSHM               2000      
-13        ADD                 0         
-14        POPM                2000      
-15        PUSHM               2002      
-16        PUSHM               2001      
-17        ADD                 0         
-18        JUMP                3         
+1         PUSHI               0         
+2         POPM                2002      
+3         PUSHI               1         
+4         POPM                2000      
+5         LABEL               0         
+6         PUSHM               2000      
+7         LES                 0         
+8         JUMPZ               0         
+9         PUSHM               22        
+10        PUSHM               2002      
+11        PUSHM               2000      
+12        ADD                 0         
+13        POPM                2002      
+14        PUSHM               2000      
+15        PUSHI               1         
+16        ADD                 0         
+17        POPM                2000      
+18        PUSHM               2002      
+19        PUSHM               2001      
+20        ADD                 0         
+21        JUMP                5         
 
 		Symbol Table
 ID        Type                MemLoc    

@@ -1,0 +1,38 @@
+
+separator		%%
+<Rat18S> → %% <Opt Declaration List> <Statement List>
+
+keyword		int
+<Opt Declaration List> → <Declaration List> | <Empty>
+<Declaration List> → <Declaration> ; <Declaration List’>
+<Declaration> → <Qualifier> <IDs>
+<Qualifier> → int | boolean | real
+
+identifier		i
+<IDs> → <Identifier> <IDs’>
+
+separator		,
+<IDs’> → , <IDs> | e
+
+identifier		max
+<IDs> → <Identifier> <IDs’>
+
+separator		;
+<IDs’> → , <IDs> | e
+<Empty> → e
+
+keyword		while
+<Declaration List’> → <Declaration List> | e
+<Empty> → e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<While> → while (<Condition>) <Statement>
+
+separator		(
+
+identifier		i
+<Condition> → <Expression> <Relop> <Expression>
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
