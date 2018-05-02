@@ -1,0 +1,27 @@
+
+Finished Parsing!
+
+		Instr Table
+Address   Op                  Oprnd     
+1         PUSHI               0         
+2         POPM                2002      
+3         PUSHI               1         
+4         POPM                2000      
+5         PUSHM               2002      
+6         PUSHM               2000      
+7         ADD                           
+8         POPM                2002      
+9         PUSHM               2000      
+10        PUSHI               1         
+11        ADD                           
+12        POPM                2000      
+13        STDOUT                        
+14        PUSHM               2002      
+15        PUSHM               2001      
+16        ADD                           
+
+		Symbol Table
+ID        Type                MemLoc    
+i         int                 2000      
+max       int                 2001      
+sum       int                 2002      

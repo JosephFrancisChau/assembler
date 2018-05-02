@@ -40,7 +40,8 @@ void Error() {
 }
 
 void PrintToken(bool doit) {
-	if (doit) {
+	doit = false;
+    if (doit) {
 		fstream coutfile(outputFile, ios_base::app);
 		coutfile << endl << token.type << "\t\t" << token.value << endl;
 		doit = false;
@@ -358,10 +359,6 @@ void Compound() {
 	if (token.value == "{" || token.value == "}") {
 		NextToken();
 		StatementList();
-		//		if (token.value == "}") {
-		//			NextToken();
-		//		}
-		//		else Error();
 	}
 	else Error();
 }
@@ -555,33 +552,32 @@ void Relop() {
 		if (token.value == "<") {
 			gen_instr("LES", "");
 			jumpVect.push_back(instr_address);
-            //jumpStack.push(9);
 			gen_instr("JUMPZ", "");
 		}
 		else if (token.value == ">") {
 			gen_instr("GRT", "");
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", "");
+            jumpVect.push_back(instr_address);
+            gen_instr("JUMPZ", "");
 		}
 		else if (token.value == "==") {
 			gen_instr("EQU", "");
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", "");
+            jumpVect.push_back(instr_address);
+            gen_instr("JUMPZ", "");
 		}
 		else if (token.value == "^=") {
 			gen_instr("NEQ", "");
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", "");
+            jumpVect.push_back(instr_address);
+            gen_instr("JUMPZ", "");
 		}
 		else if (token.value == "=>") {
 			gen_instr("GEQ", "");
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", "");
+            jumpVect.push_back(instr_address);
+            gen_instr("JUMPZ", "");
 		}
 		else /*if (token.value == "=<")*/ {
 			gen_instr("LEQ", "");
-			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", "");
+            jumpVect.push_back(instr_address);
+            gen_instr("JUMPZ", "");
 		}
 		NextToken();
 	}
@@ -710,7 +706,7 @@ void Empty() {
 
 void PrintRule(int ruleNum) {
 	fstream coutfile(outputFile, ios_base::app);
-	switch (ruleNum) {
+	switch (100) {
 	case 1:
 		coutfile << "<Rat18S> → %% <Opt Declaration List> <Statement List>" << endl;
 		break;
@@ -826,7 +822,7 @@ void PrintRule(int ruleNum) {
 		coutfile << "<Empty> → e" << endl;
 		break;
 	default:
-		coutfile << "Syntax Error" << endl;
+		//coutfile << "Syntax Error" << endl;
 		break;
 	}
 	coutfile.close();
@@ -871,5 +867,6 @@ void back_patch(int jump_addr) {
 	int addr = jumpVect.back(); // used for index for back patching
 	//jumpStack.pop();
 	jumpVect.pop_back();
-	instrTable[addr].oprand = jump_addr;
+	string temp = to_string(jump_addr);
+	instrTable[addr-1].oprand = temp;
 }

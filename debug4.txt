@@ -97,8 +97,8 @@ Address   Op                  Oprnd
 1         LABEL                         
 2         PUSHM               2000      
 3         LES                           
-4         JUMPZ                         
-5         PUSHM                        
+4         JUMPZ               11        
+5         PUSHM               2001      
 6         PUSHM               2000      
 7         PUSHI               1         
 8         ADD                           
