@@ -137,4 +137,6 @@ void Real();
 
 void gen_instr(string op, int oprnd);
 
+void back_patch(int jump_addr);
+
 //#endif /* parser_h */

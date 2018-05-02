@@ -508,6 +508,8 @@ void Scan() {
 void While() {
 	PrintRule(29);
 	if (token.value == "while") {
+	    int addr = instr_address;
+	    gen_instr("LABEL", 0);
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -515,6 +517,8 @@ void While() {
 			if (token.value == ")") {
 				NextToken();
 				Statement();
+				gen_instr("JUMP", addr);
+				back_patch(instr_address);
 			}
 			else Error();
 		}
@@ -534,9 +538,41 @@ void Condition() {
 //R31: <Relop> → == | ^= | > | < | => | =<
 void Relop() {
 	PrintRule(31);
+	string op = token.value;
+
 	if (token.value == "==" || token.value == "^=" || token.value == ">" ||
 		token.value == "<" || token.value == "=>" || token.value == "=<") {
-		NextToken();
+		if(token.value == "<"){
+		    gen_instr("LES", 0);
+		    jumpStack.push(instr_address);
+		    gen_instr("JUMPZ", 0);
+		}
+		else if(token.value == ">"){
+            gen_instr("GRT", 0);
+            jumpStack.push(instr_address);
+            gen_instr("JUMPZ", 0);
+        }
+        else if(token.value == "=="){
+            gen_instr("EQU", 0);
+            jumpStack.push(instr_address);
+            gen_instr("JUMPZ", 0);
+        }
+        else if(token.value == "^="){
+            gen_instr("NEQ", 0);
+            jumpStack.push(instr_address);
+            gen_instr("JUMPZ", 0);
+        }
+        else if(token.value == "=>"){
+            gen_instr("GEQ", 0);
+            jumpStack.push(instr_address);
+            gen_instr("JUMPZ", 0);
+        }
+        else if(token.value == "=<"){
+            gen_instr("LEQ", 0);
+            jumpStack.push(instr_address);
+            gen_instr("JUMPZ", 0);
+        }
+	    NextToken();
 	}
 	else Error();
 }
@@ -613,7 +649,7 @@ void Primary() {
 		}
 		else {
 			fstream coutfile(outputFile, ios_base::app);
-			coutfile << "Error! " << token.value << " is not declard!" << endl;
+			coutfile << "Error! " << token.value << " is not declared!" << endl;
 			coutfile.close();
 			exit(0);
 		}
@@ -817,3 +853,11 @@ void gen_instr(string op, int oprnd){
 	instrTable.push_back(temp);
 	instr_address++;
 }
+
+void back_patch(int jump_addr) {
+    int addr = jumpStack.top(); // used for index for back patching
+    jumpStack.pop();
+    instrTable[addr].oprand = jump_addr;
+}
+
+
