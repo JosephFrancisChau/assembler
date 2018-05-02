@@ -655,7 +655,6 @@ void Primary() {
 			coutfile.close();
 			exit(0);
 		}
-		Identifier();
         int addr; // used to store address of identifier for instruction table
         // Looping through symbol table vector looking for identifier value
         for(int i = 0; i < symbolTable.size(); i++){
@@ -664,6 +663,7 @@ void Primary() {
             }
         }
         gen_instr("PUSHM", addr);
+		Identifier();
 		if (token.value == "[") {
 			NextToken();
 			IDs();

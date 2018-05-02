@@ -2,19 +2,77 @@
 separator		%%
 <Rat18S> → %% <Opt Declaration List> <Statement List>
 
-keyword		while
+keyword		int
 <Opt Declaration List> → <Declaration List> | <Empty>
+<Declaration List> → <Declaration> ; <Declaration List’>
+<Declaration> → <Qualifier> <IDs>
+<Qualifier> → int | boolean | real
+
+identifier		a
+<IDs> → <Identifier> <IDs’>
+
+separator		,
+<IDs’> → , <IDs> | e
+
+identifier		b
+<IDs> → <Identifier> <IDs’>
+
+separator		,
+<IDs’> → , <IDs> | e
+
+identifier		c
+<IDs> → <Identifier> <IDs’>
+
+separator		;
+<IDs’> → , <IDs> | e
+<Empty> → e
+
+identifier		a
+<Declaration List’> → <Declaration List> | e
 <Empty> → e
 <Statement List> → <Statement> <Statement List’>
 <Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
-<While> → while (<Condition>) <Statement>
+<Assign> → <Identifier> = <Expression> ;
 
-separator		(
+operator		=
 
-identifier		i
-<Condition> → <Expression> <Relop> <Expression>
+identifier		b
 <Expression> → <Term> <Expression’>
 <Term> → <Factor> <Term’>
 <Factor> → - <Primary> | <Primary>
 <Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
-Error! i is not declard!
+
+operator		+
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+
+identifier		c
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		;
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+NotToken		$
+
+NotToken		$
+<Statement List’> → <Statement List> | e
+<Empty> → e
+
+		Symbol Table
+ID        Type                MemLoc    
+a         int                 2000      
+b         int                 2001      
+c         int                 2002      
+
+		Instr Table
+Address   Op                  Oprnd     
+1         PUSHM               2001      
+2         PUSHM               2002      
+3         ADD                 0         
+4         POPM                2000      
