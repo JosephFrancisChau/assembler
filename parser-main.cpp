@@ -1,4 +1,4 @@
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "globals.h"
 #include "lexer.h"
 #include "parser.h"
@@ -28,20 +28,20 @@ int main(int argc, const char * argv[]) {
 		while (sourceFile >> word) {
 			vector<string> vec = splitWord(word);
 			for (unsigned i = 0; i < vec.size(); ++i) {
-				if (!vec.at(i).empty())	
+				if (!vec.at(i).empty())
 					allCleanWords.push_back(vec.at(i));
 			}
 		}
 		allCleanWords.push_back("$");	//push "$" after read in all the words
-		
+
 		Parser(allCleanWords);
 	}
 	else {
 		cout << "Can't open the file: " << inputFile << endl;
 	}
 
-	printSymbol();
 	printInstr();
+	printSymbol();
 	sourceFile.close();
 	coutfile.close();
 
