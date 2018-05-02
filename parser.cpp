@@ -13,18 +13,13 @@ vector<string> allWords;
 vector<Symbol> symbolTable;	//stores token.value and memAddr
 vector<Instr> instrTable;	//stores
 
-int tokenIndex;
+unsigned tokenIndex;
 int memAddr = 1999;
 int ruleNum;
 int instr_address = 1; // global variable for instruction address
-
 Token token;
-
 string symbolType;
-
 stack<int> jumpStack;
-
-
 
 void Parser(vector<string> v) {
 	allWords = v;
@@ -53,30 +48,30 @@ void printSymbol() {
 	fstream coutfile(outputFile, ios_base::app);
 	coutfile.setf(ios::left);
 	coutfile << "\n\t\tSymbol Table" << endl;
-	coutfile << setw(10) << "ID" << setw(20) << "Type" << setw(10)<< "MemLoc" << endl;
+	coutfile << setw(10) << "ID" << setw(20) << "Type" << setw(10) << "MemLoc" << endl;
 	coutfile.close();
-	for (int i = 0; i < symbolTable.size(); ++i) {
+	for (unsigned i = 0; i < symbolTable.size(); ++i) {
 		fstream coutfile(outputFile, ios_base::app);
 		coutfile.setf(ios::left);
 		coutfile << setw(10) << symbolTable.at(i).name << setw(20) << symbolTable.at(i).type << setw(10)
-				 << symbolTable.at(i).addr << endl;
+			<< symbolTable.at(i).addr << endl;
 		coutfile.close();
 	}
 }
 
 void printInstr() {
-    fstream coutfile(outputFile, ios_base::app);
-    coutfile.setf(ios::left);
-    coutfile << "\n\t\tInstr Table" << endl;
-    coutfile << setw(10) << "Address" << setw(20) << "Op" << setw(10)<< "Oprnd" << endl;
-    coutfile.close();
-    for (int i = 0; i < instrTable.size(); ++i) {
-        fstream coutfile(outputFile, ios_base::app);
-        coutfile.setf(ios::left);
-        coutfile << setw(10) << instrTable.at(i).addr << setw(20) << instrTable.at(i).optor << setw(10)
-                 << instrTable.at(i).oprand << endl;
-        coutfile.close();
-    }
+	fstream coutfile(outputFile, ios_base::app);
+	coutfile.setf(ios::left);
+	coutfile << "\n\t\tInstr Table" << endl;
+	coutfile << setw(10) << "Address" << setw(20) << "Op" << setw(10) << "Oprnd" << endl;
+	coutfile.close();
+	for (unsigned i = 0; i < instrTable.size(); ++i) {
+		fstream coutfile(outputFile, ios_base::app);
+		coutfile.setf(ios::left);
+		coutfile << setw(10) << instrTable.at(i).addr << setw(20) << instrTable.at(i).optor << setw(10)
+			<< instrTable.at(i).oprand << endl;
+		coutfile.close();
+	}
 }
 
 Pair checkID() {
@@ -85,7 +80,7 @@ Pair checkID() {
 	p.symbolIndex = -1;
 	if (token.type == "identifier") {
 		//check an identifier is declared or not
-		for (int i = 0; i < symbolTable.size(); ++i) {
+		for (unsigned i = 0; i < symbolTable.size(); ++i) {
 			if (symbolTable.at(i).name == token.value) {
 				p.declared = true;
 				p.symbolIndex = i;
@@ -117,6 +112,12 @@ void Rat18S() {
 
 	string lastWord = allWords.back();
 	if (lastWord != "$") Error();
+	else {
+		fstream coutfile(outputFile, ios_base::app);
+		coutfile.setf(ios::left);
+		coutfile << "\nFinished Parsring!" << endl;
+		coutfile.close();
+	}
 }
 
 
@@ -229,7 +230,7 @@ void DeclarationListP() {
 void Declaration() {
 	PrintRule(15);
 	Qualifier();
-	
+
 	if (!checkID().declared) {
 		Symbol symbol;
 		++memAddr;
@@ -244,7 +245,7 @@ void Declaration() {
 		coutfile.close();
 		exit(0);
 	}
-	
+
 	IDs();
 }
 
@@ -264,7 +265,7 @@ void IDsP() {
 	else {
 		if (token.value == ",") {
 			NextToken();
-			
+
 			if (!checkID().declared) {
 				Symbol symbol;
 				++memAddr;
@@ -279,7 +280,7 @@ void IDsP() {
 				coutfile.close();
 				exit(0);
 			}
-			
+
 			IDs();
 		}
 		else Error();
@@ -372,12 +373,12 @@ void Assign() {
 			NextToken();
 			Expression();
 			int addr; // used to store address of identifier for instruction table
-            // Looping through symbol table vector looking for identifier value
-            for(int i = 0; i < symbolTable.size(); i++){
-                if(symbolTable.at(i).name == save.value){
-                    addr = symbolTable.at(i).addr;
-                }
-            }
+					  // Looping through symbol table vector looking for identifier value
+			for (unsigned i = 0; i < symbolTable.size(); i++) {
+				if (symbolTable.at(i).name == save.value) {
+					addr = symbolTable.at(i).addr;
+				}
+			}
 			gen_instr("POPM", addr);
 			if (token.value == ";") {
 				NextToken();
@@ -393,46 +394,45 @@ void Assign() {
 		Error();
 }
 
-//R23: <If> → if ( <Condition> ) <Statement> <If’> endif
+//use the original rule of <If> because our previous rule removed LR which did not work
+//R23: <If> → if ( <Condition> ) <Statement> endif | if ( <Condition> ) <Statement> else <statement> endif
 void If() {
 	PrintRule(23);
 	if (token.value == "if") {
-	    int addr = instr_address;
-		NextToken();
-		if (token.value == "(") {
-			NextToken();
-			Condition();
-			if (token.value == ")") {
-				NextToken();
-				Statement();
+		int addr = instr_address;
+        NextToken();
+        if (token.value == "(") {
+            NextToken();
+            Condition();
+            if (token.value == ")") {
+                NextToken();
+                Statement();
 				back_patch(instr_address);
-				IfP();
-				NextToken();
-				if (token.value == "endif") {
-					NextToken();
-				}
-				else
+                if (token.value == "endif") {
+                    NextToken();
+                }
+                else if (token.value == "else") {
+                    NextToken();
+                    Statement();
+                    if (token.value == "endif") {
+                        NextToken();
+                    }
+                    else {
+						Error();
+                    }
+                }
+                else {
 					Error();
-			}
-		}
-	}
-	else Error();
-}
-
-//R24: <If’> → else <Statement> | <Empty>
-void IfP() {
-	PrintRule(24);
-	if (token.type == "NotToken" || token.type == "COMMENT") {
-		Empty();
-	}
-	else {
-		if (token.value == "else") {
-			NextToken();
-			Statement();
-		}
-		else
+                }
+            }
+            else {
+				Error();
+            }
+        }
+        else {
 			Error();
-	}
+        }
+    }
 }
 
 //R25: <Return> → return <Return’> ;
@@ -510,8 +510,8 @@ void Scan() {
 void While() {
 	PrintRule(29);
 	if (token.value == "while") {
-	    int addr = instr_address;
-	    gen_instr("LABEL", 0);
+		int addr = instr_address;
+		gen_instr("LABEL", 0);
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -544,37 +544,37 @@ void Relop() {
 
 	if (token.value == "==" || token.value == "^=" || token.value == ">" ||
 		token.value == "<" || token.value == "=>" || token.value == "=<") {
-		if(token.value == "<"){
-		    gen_instr("LES", 0);
-		    jumpStack.push(instr_address);
-		    gen_instr("JUMPZ", 0);
+		if (token.value == "<") {
+			gen_instr("LES", 0);
+			jumpStack.push(instr_address);
+			gen_instr("JUMPZ", 0);
 		}
-		else if(token.value == ">"){
-            gen_instr("GRT", 0);
-            jumpStack.push(instr_address);
-            gen_instr("JUMPZ", 0);
-        }
-        else if(token.value == "=="){
-            gen_instr("EQU", 0);
-            jumpStack.push(instr_address);
-            gen_instr("JUMPZ", 0);
-        }
-        else if(token.value == "^="){
-            gen_instr("NEQ", 0);
-            jumpStack.push(instr_address);
-            gen_instr("JUMPZ", 0);
-        }
-        else if(token.value == "=>"){
-            gen_instr("GEQ", 0);
-            jumpStack.push(instr_address);
-            gen_instr("JUMPZ", 0);
-        }
-        else if(token.value == "=<"){
-            gen_instr("LEQ", 0);
-            jumpStack.push(instr_address);
-            gen_instr("JUMPZ", 0);
-        }
-	    NextToken();
+		else if (token.value == ">") {
+			gen_instr("GRT", 0);
+			jumpStack.push(instr_address);
+			gen_instr("JUMPZ", 0);
+		}
+		else if (token.value == "==") {
+			gen_instr("EQU", 0);
+			jumpStack.push(instr_address);
+			gen_instr("JUMPZ", 0);
+		}
+		else if (token.value == "^=") {
+			gen_instr("NEQ", 0);
+			jumpStack.push(instr_address);
+			gen_instr("JUMPZ", 0);
+		}
+		else if (token.value == "=>") {
+			gen_instr("GEQ", 0);
+			jumpStack.push(instr_address);
+			gen_instr("JUMPZ", 0);
+		}
+		else /*if (token.value == "=<")*/ {
+			gen_instr("LEQ", 0);
+			jumpStack.push(instr_address);
+			gen_instr("JUMPZ", 0);
+		}
+		NextToken();
 	}
 	else Error();
 }
@@ -589,18 +589,18 @@ void Expression() {
 //R33: <Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | 𝜀
 void ExpressionP() {
 	PrintRule(33);
-	if (token.value == "+"){
+	if (token.value == "+") {
 		NextToken();
 		Term();
 		gen_instr("ADD", 0);
 		ExpressionP();
 	}
 	else if (token.value == "-") {
-        NextToken();
-        Term();
-        gen_instr("SUB", 0);
-        ExpressionP();
-    }
+		NextToken();
+		Term();
+		gen_instr("SUB", 0);
+		ExpressionP();
+	}
 	else Empty();
 }
 
@@ -614,18 +614,18 @@ void Term() {
 //R35: <Term’> → * <Factor> <Term’> | / <Factor> <Term’> | 𝜀
 void TermP() {
 	PrintRule(35);
-	if (token.value == "*"){
+	if (token.value == "*") {
 		NextToken();
 		Factor();
 		gen_instr("MUL", 0);
 		TermP();
 	}
-    if (token.value == "/"){
-        NextToken();
-        Factor();
-        gen_instr("DIV", 0);
-        TermP();
-    }
+	if (token.value == "/") {
+		NextToken();
+		Factor();
+		gen_instr("DIV", 0);
+		TermP();
+	}
 	else Empty();
 }
 
@@ -644,8 +644,8 @@ void Factor() {
 //R37: <Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
 void Primary() {
 	PrintRule(37);
-    Token save = token;
-    if (token.type == "identifier") {
+	Token save = token;
+	if (token.type == "identifier") {
 		if (checkID().declared) {
 			//check type
 		}
@@ -655,14 +655,14 @@ void Primary() {
 			coutfile.close();
 			exit(0);
 		}
-        int addr; // used to store address of identifier for instruction table
-        // Looping through symbol table vector looking for identifier value
-        for(int i = 0; i < symbolTable.size(); i++){
-            if(symbolTable.at(i).name == save.value){
-                addr = symbolTable.at(i).addr;
-            }
-        }
-        gen_instr("PUSHM", addr);
+		int addr; // used to store address of identifier for instruction table
+				  // Looping through symbol table vector looking for identifier value
+		for (unsigned i = 0; i < symbolTable.size(); i++) {
+			if (symbolTable.at(i).name == save.value) {
+				addr = symbolTable.at(i).addr;
+			}
+		}
+		gen_instr("PUSHM", addr);
 		Identifier();
 		if (token.value == "[") {
 			NextToken();
@@ -772,7 +772,7 @@ void PrintRule(int ruleNum) {
 		coutfile << "<Assign> → <Identifier> = <Expression> ;" << endl;
 		break;
 	case 23:
-		coutfile << "<If> →  if ( <Condition> ) <Statement> <If’> endif" << endl;
+		coutfile << "<If> → if ( <Condition> ) <Statement> endif | if ( <Condition> ) <Statement> else <statement> endif" << endl;
 		break;
 	case 24:
 		coutfile << "<If’> → else <Statement> | e" << endl;
@@ -847,8 +847,8 @@ void Integer() {
 	else Error();
 }
 
-void gen_instr(string op, int oprnd){
-    Instr temp = Instr();
+void gen_instr(string op, int oprnd) {
+	Instr temp = Instr();
 	temp.addr = instr_address;
 	temp.optor = op;
 	temp.oprand = oprnd;
@@ -857,9 +857,7 @@ void gen_instr(string op, int oprnd){
 }
 
 void back_patch(int jump_addr) {
-    int addr = jumpStack.top(); // used for index for back patching
-    jumpStack.pop();
-    instrTable[addr].oprand = jump_addr;
+	int addr = jumpStack.top(); // used for index for back patching
+	jumpStack.pop();
+	instrTable[addr].oprand = jump_addr;
 }
-
-
