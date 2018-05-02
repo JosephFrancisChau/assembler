@@ -397,6 +397,7 @@ void Assign() {
 void If() {
 	PrintRule(23);
 	if (token.value == "if") {
+	    int addr = instr_address;
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -404,6 +405,7 @@ void If() {
 			if (token.value == ")") {
 				NextToken();
 				Statement();
+				back_patch(instr_address);
 				IfP();
 				NextToken();
 				if (token.value == "endif") {
