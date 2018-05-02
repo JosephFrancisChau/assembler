@@ -1,0 +1,20 @@
+
+separator		%%
+<Rat18S> → %% <Opt Declaration List> <Statement List>
+
+keyword		while
+<Opt Declaration List> → <Declaration List> | <Empty>
+<Empty> → e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<While> → while (<Condition>) <Statement>
+
+separator		(
+
+identifier		i
+<Condition> → <Expression> <Relop> <Expression>
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+Error! i is not declard!
