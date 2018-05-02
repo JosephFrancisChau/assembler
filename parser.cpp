@@ -551,19 +551,24 @@ void Expression() {
 //R33: <Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | 𝜀
 void ExpressionP() {
 	PrintRule(33);
-	if (token.value == "+" || token.value == "-") {
+	if (token.value == "+"){
 		NextToken();
 		Term();
 		gen_instr("ADD", 0);
 		ExpressionP();
 	}
+	else if (token.value == "-") {
+        NextToken();
+        Term();
+        gen_instr("SUB", 0);
+        ExpressionP();
+    }
 	else Empty();
 }
 
 //R34: <Term> → <Factor> <Term’>
 void Term() {
 	PrintRule(34);
-	
 	Factor();
 	TermP();
 }
@@ -571,11 +576,18 @@ void Term() {
 //R35: <Term’> → * <Factor> <Term’> | / <Factor> <Term’> | 𝜀
 void TermP() {
 	PrintRule(35);
-	if (token.value == "*" || token.value == "/") {
+	if (token.value == "*"){
 		NextToken();
 		Factor();
+		gen_instr("MUL", 0);
 		TermP();
 	}
+    if (token.value == "/"){
+        NextToken();
+        Factor();
+        gen_instr("DIV", 0);
+        TermP();
+    }
 	else Empty();
 }
 
@@ -594,8 +606,8 @@ void Factor() {
 //R37: <Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
 void Primary() {
 	PrintRule(37);
-	if (token.type == "identifier") {
-
+    Token save = token;
+    if (token.type == "identifier") {
 		if (checkID().declared) {
 			//check type
 		}
@@ -605,8 +617,15 @@ void Primary() {
 			coutfile.close();
 			exit(0);
 		}
-
 		Identifier();
+        int addr; // used to store address of identifier for instruction table
+        // Looping through symbol table vector looking for identifier value
+        for(int i = 0; i < symbolTable.size(); i++){
+            if(symbolTable.at(i).name == save.value){
+                addr = symbolTable.at(i).addr;
+            }
+        }
+        gen_instr("PUSHM", addr);
 		if (token.value == "[") {
 			NextToken();
 			IDs();
