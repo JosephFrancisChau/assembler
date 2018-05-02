@@ -11,7 +11,7 @@ struct Symbol {
 };
 struct Instr {
 	int addr;
-	int oprand;
+	string oprand;
 	string optor;
 
 };
@@ -133,7 +133,7 @@ void Identifier();
 void Integer();
 void Real();
 
-void gen_instr(string op, int oprnd);
+void gen_instr(string op, string oprnd);
 
 void back_patch(int jump_addr);
 

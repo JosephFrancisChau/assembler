@@ -382,7 +382,8 @@ void Assign() {
 					addr = symbolTable.at(i).addr;
 				}
 			}
-			gen_instr("POPM", addr);
+			string strTemp = to_string(addr);
+			gen_instr("POPM", strTemp);
 			if (token.value == ";") {
 				NextToken();
 				PrintToken(true);
@@ -491,6 +492,7 @@ void Print() {
 void Scan() {
 	PrintRule(28);
 	if (token.value == "get") {
+	    gen_instr("STDI","");
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -514,7 +516,7 @@ void While() {
 	PrintRule(29);
 	if (token.value == "while") {
 		int addr = instr_address;
-		gen_instr("LABEL", 0);
+		gen_instr("LABEL", "");
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -522,7 +524,8 @@ void While() {
 			if (token.value == ")") {
 				NextToken();
 				Statement();
-				gen_instr("JUMP", addr);
+				string temp = to_string(addr);
+				gen_instr("JUMP", temp);
 				back_patch(instr_address);
 			}
 			else Error();
@@ -548,34 +551,34 @@ void Relop() {
 	if (token.value == "==" || token.value == "^=" || token.value == ">" ||
 		token.value == "<" || token.value == "=>" || token.value == "=<") {
 		if (token.value == "<") {
-			gen_instr("LES", 0);
+			gen_instr("LES", "");
 			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", 0);
+			gen_instr("JUMPZ", "");
 		}
 		else if (token.value == ">") {
-			gen_instr("GRT", 0);
+			gen_instr("GRT", "");
 			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", 0);
+			gen_instr("JUMPZ", "");
 		}
 		else if (token.value == "==") {
-			gen_instr("EQU", 0);
+			gen_instr("EQU", "");
 			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", 0);
+			gen_instr("JUMPZ", "");
 		}
 		else if (token.value == "^=") {
-			gen_instr("NEQ", 0);
+			gen_instr("NEQ", "");
 			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", 0);
+			gen_instr("JUMPZ", "");
 		}
 		else if (token.value == "=>") {
-			gen_instr("GEQ", 0);
+			gen_instr("GEQ", "");
 			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", 0);
+			gen_instr("JUMPZ", "");
 		}
 		else /*if (token.value == "=<")*/ {
-			gen_instr("LEQ", 0);
+			gen_instr("LEQ", "");
 			jumpStack.push(instr_address);
-			gen_instr("JUMPZ", 0);
+			gen_instr("JUMPZ", "");
 		}
 		NextToken();
 	}
@@ -595,13 +598,13 @@ void ExpressionP() {
 	if (token.value == "+") {
 		NextToken();
 		Term();
-		gen_instr("ADD", 0);
+		gen_instr("ADD", "");
 		ExpressionP();
 	}
 	else if (token.value == "-") {
 		NextToken();
 		Term();
-		gen_instr("SUB", 0);
+		gen_instr("SUB", "");
 		ExpressionP();
 	}
 	else Empty();
@@ -620,13 +623,13 @@ void TermP() {
 	if (token.value == "*") {
 		NextToken();
 		Factor();
-		gen_instr("MUL", 0);
+		gen_instr("MUL", "");
 		TermP();
 	}
 	if (token.value == "/") {
 		NextToken();
 		Factor();
-		gen_instr("DIV", 0);
+		gen_instr("DIV", "");
 		TermP();
 	}
 	else Empty();
@@ -666,7 +669,8 @@ void Primary() {
 				continue;
 			}
 		}
-		gen_instr("PUSHM", addr);
+		string temp = to_string(addr);
+		gen_instr("PUSHM", temp);
 		Identifier();
 		if (token.value == "[") {
 			NextToken();
@@ -846,14 +850,13 @@ void Real() {
 
 void Integer() {
 	if (token.type == "integer") {
-	    int temp = stoi(token.value);
-	    gen_instr("PUSHI", temp);
+	    gen_instr("PUSHI", token.value);
 		NextToken();
 	}
 	else Error();
 }
 
-void gen_instr(string op, int oprnd) {
+void gen_instr(string op, string oprnd) {
 	Instr temp = Instr();
 	temp.addr = instr_address;
 	temp.optor = op;

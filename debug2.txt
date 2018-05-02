@@ -243,23 +243,24 @@ Address   Op                  Oprnd
 2         POPM                2002      
 3         PUSHI               1         
 4         POPM                2000      
-5         LABEL               0         
-6         PUSHM               2000      
-7         LES                 0         
-8         JUMPZ               0         
-9         PUSHM               22        
-10        PUSHM               2002      
-11        PUSHM               2000      
-12        ADD                 0         
-13        POPM                2002      
-14        PUSHM               2000      
-15        PUSHI               1         
-16        ADD                 0         
-17        POPM                2000      
-18        PUSHM               2002      
-19        PUSHM               2001      
-20        ADD                 0         
-21        JUMP                5         
+5         STDI                          
+6         LABEL                         
+7         PUSHM               2000      
+8         LES                           
+9         JUMPZ                         
+10        PUSHM                        
+11        PUSHM               2002      
+12        PUSHM               2000      
+13        ADD                           
+14        POPM                2002      
+15        PUSHM               2000      
+16        PUSHI               1         
+17        ADD                           
+18        POPM                2000      
+19        PUSHM               2002      
+20        PUSHM               2001      
+21        ADD                           
+22        JUMP                6         
 
 		Symbol Table
 ID        Type                MemLoc    
