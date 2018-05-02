@@ -1,0 +1,234 @@
+
+separator		%%
+<Rat18S> → %% <Opt Declaration List> <Statement List>
+
+keyword		int
+<Opt Declaration List> → <Declaration List> | <Empty>
+<Declaration List> → <Declaration> ; <Declaration List’>
+<Declaration> → <Qualifier> <IDs>
+<Qualifier> → int | boolean | real
+
+identifier		i
+<IDs> → <Identifier> <IDs’>
+
+separator		,
+<IDs’> → , <IDs> | e
+
+identifier		max
+<IDs> → <Identifier> <IDs’>
+
+separator		,
+<IDs’> → , <IDs> | e
+
+identifier		sum
+<IDs> → <Identifier> <IDs’>
+
+separator		;
+<IDs’> → , <IDs> | e
+<Empty> → e
+
+identifier		sum
+<Declaration List’> → <Declaration List> | e
+<Empty> → e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Assign> → <Identifier> = <Expression> ;
+
+operator		=
+
+integer		0
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		;
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+identifier		i
+
+identifier		i
+<Statement List’> → <Statement List> | e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Assign> → <Identifier> = <Expression> ;
+
+operator		=
+
+integer		1
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		;
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+keyword		get
+
+keyword		get
+<Statement List’> → <Statement List> | e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Scan> → get(<IDs>);
+
+separator		(
+
+identifier		max
+<IDs> → <Identifier> <IDs’>
+
+separator		)
+<IDs’> → , <IDs> | e
+<Empty> → e
+
+separator		;
+
+keyword		while
+<Statement List’> → <Statement List> | e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<While> → while (<Condition>) <Statement>
+
+separator		(
+
+identifier		i
+<Condition> → <Expression> <Relop> <Expression>
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+operator		<
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+<Relop> → == | ^= | > | < | => | =<
+
+identifier		max
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		)
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+separator		{
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Compound> → { <Statement List> }
+
+identifier		sum
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Assign> → <Identifier> = <Expression> ;
+
+operator		=
+
+identifier		sum
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+operator		+
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+
+identifier		i
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		;
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+identifier		i
+
+identifier		i
+<Statement List’> → <Statement List> | e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Assign> → <Identifier> = <Expression> ;
+
+operator		=
+
+identifier		i
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+operator		+
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+
+integer		1
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		;
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+separator		}
+
+separator		}
+<Statement List’> → <Statement List> | e
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Compound> → { <Statement List> }
+
+keyword		put
+<Statement List> → <Statement> <Statement List’>
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Print> → put (<Expression>);
+
+separator		(
+
+identifier		sum
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+operator		+
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+
+identifier		max
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		)
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+separator		;
+
+NotToken		$
+<Statement List’> → <Statement List> | e
+<Empty> → e
+<Statement List’> → <Statement List> | e
+<Empty> → e

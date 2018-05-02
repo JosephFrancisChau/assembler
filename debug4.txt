@@ -36,3 +36,76 @@ identifier		i
 <Term> → <Factor> <Term’>
 <Factor> → - <Primary> | <Primary>
 <Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+operator		<
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+<Relop> → == | ^= | > | < | => | =<
+
+identifier		max
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		)
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+identifier		i
+<Statement> → <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+<Assign> → <Identifier> = <Expression> ;
+
+operator		=
+
+identifier		i
+<Expression> → <Term> <Expression’>
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+operator		+
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+
+integer		1
+<Term> → <Factor> <Term’>
+<Factor> → - <Primary> | <Primary>
+<Primary> → <Identifier> | <Integer> | <Identifier> (<IDs>) | (<Expression>) | <Real> | true | false
+
+separator		;
+<Term’> → * <Factor> <Term’> | / <Factor> <Term’> | e
+<Empty> → e
+<Expression’> → + <Term> <Expression’> | - <Term> <Expression’> | e
+<Empty> → e
+
+NotToken		$
+
+NotToken		$
+<Statement List’> → <Statement List> | e
+<Empty> → e
+
+Finished Parsing!
+
+		Instr Table
+Address   Op                  Oprnd     
+1         LABEL                         
+2         PUSHM               2000      
+3         LES                           
+4         JUMPZ                         
+5         PUSHM                        
+6         PUSHM               2000      
+7         PUSHI               1         
+8         ADD                           
+9         POPM                2000      
+10        JUMP                1         
+
+		Symbol Table
+ID        Type                MemLoc    
+i         int                 2000      
+max       int                 2001      

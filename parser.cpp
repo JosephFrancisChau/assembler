@@ -13,6 +13,7 @@ using namespace std;
 vector<string> allWords;
 vector<Symbol> symbolTable;	//stores token.value and memAddr
 vector<Instr> instrTable;	//stores
+vector<int> jumpVect;
 
 stack<int> jumpStack;
 
@@ -553,7 +554,7 @@ void Relop() {
 		token.value == "<" || token.value == "=>" || token.value == "=<") {
 		if (token.value == "<") {
 			gen_instr("LES", "");
-			jumpStack.push(instr_address);
+			jumpVect.push_back(instr_address);
             //jumpStack.push(9);
 			gen_instr("JUMPZ", "");
 		}
@@ -665,13 +666,8 @@ void Primary() {
 		}
 		int addr; // used to store address of identifier for instruction table
 				  // Looping through symbol table vector looking for identifier value
-		for (int i = 0; i < symbolTable.size(); i++) {
-			if (symbolTable.at(i).name == save.value) {
-				addr = symbolTable.at(i).addr;
-				continue;
-			}
-		}
-		string temp = to_string(addr);
+		int ind = checkID().symbolIndex;
+		string temp = to_string(symbolTable[ind].addr);
 		gen_instr("PUSHM", temp);
 		Identifier();
 		if (token.value == "[") {
@@ -872,7 +868,8 @@ void gen_instr(string op, string oprnd) {
 }
 
 void back_patch(int jump_addr) {
-	int addr = jumpStack.top(); // used for index for back patching
-	jumpStack.pop();
+	int addr = jumpVect.back(); // used for index for back patching
+	//jumpStack.pop();
+	jumpVect.pop_back();
 	instrTable[addr].oprand = jump_addr;
 }
