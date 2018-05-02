@@ -470,6 +470,7 @@ void ReturnP() {
 void Print() {
 	PrintRule(27);
 	if (token.value == "put") {
+	    gen_instr("STDOUT", "");
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -492,7 +493,7 @@ void Print() {
 void Scan() {
 	PrintRule(28);
 	if (token.value == "get") {
-	    gen_instr("STDI","");
+	    gen_instr("STDIN","");
 		NextToken();
 		if (token.value == "(") {
 			NextToken();
@@ -553,6 +554,7 @@ void Relop() {
 		if (token.value == "<") {
 			gen_instr("LES", "");
 			jumpStack.push(instr_address);
+            //jumpStack.push(9);
 			gen_instr("JUMPZ", "");
 		}
 		else if (token.value == ">") {
@@ -836,6 +838,10 @@ void PrintRule(int ruleNum) {
 
 void Identifier() {
 	if (token.type == "identifier") {
+//	    int i = checkID().symbolIndex;
+//	    int addr = symbolTable[i].addr;
+//	    string temp = to_string(addr);
+//	    gen_instr("PUSHM", temp );
 		NextToken();
 	}
 	else Error();

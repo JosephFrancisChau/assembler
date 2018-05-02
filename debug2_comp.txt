@@ -239,44 +239,29 @@ Finished Parsing!
 
 		Instr Table
 Address   Op                  Oprnd     
-1         PUSHI               2000      
-2         PUSHI               2001      
-3         PUSHI               2002      
-4         PUSHI               2002      
-5         PUSHI               0         
-6         POPM                2002      
-7         PUSHI               2000      
-8         PUSHI               1         
-9         POPM                2000      
-10        STDIN                         
-11        PUSHI               2001      
-12        LABEL                         
-13        PUSHM               2000      
-14        PUSHI               2000      
-15        LES                           
-16        JUMPZ                         
-17        PUSHM               '         
-18        PUSHI               2001      
-19        PUSHI               2002      
+1         PUSHI               0         
+2         POPM                2002      
+3         PUSHI               1         
+4         POPM                2000      
+5         STDIN                         
+6         LABEL                         
+7         PUSHM               2000      
+8         LES                           
+9         JUMPZ                         
+10        PUSHM                        
+11        PUSHM               2002      
+12        PUSHM               2000      
+13        ADD                           
+14        POPM                2002      
+15        PUSHM               2000      
+16        PUSHI               1         
+17        ADD                           
+18        POPM                2000      
+19        STDOUT                        
 20        PUSHM               2002      
-21        PUSHI               2002      
-22        PUSHM               2000      
-23        PUSHI               2000      
-24        ADD                           
-25        POPM                2002      
-26        PUSHI               2000      
-27        PUSHM               2000      
-28        PUSHI               2000      
-29        PUSHI               1         
-30        ADD                           
-31        POPM                2000      
-32        STDOUT                        
-33        PUSHM               2002      
-34        PUSHI               2002      
-35        PUSHM               2001      
-36        PUSHI               2001      
-37        ADD                           
-38        JUMP                12        
+21        PUSHM               2001      
+22        ADD                           
+23        JUMP                6         
 
 		Symbol Table
 ID        Type                MemLoc    
