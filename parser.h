@@ -17,8 +17,9 @@ struct Symbol {
 };
 struct Instr {
 	int addr;
+	int oprand;
 	string optor;
-	string oprand;
+
 };
 struct Pair {
 	bool declared;

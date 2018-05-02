@@ -374,7 +374,7 @@ void Assign() {
 			int addr; // used to store address of identifier for instruction table
             // Looping through symbol table vector looking for identifier value
             for(int i = 0; i < symbolTable.size(); i++){
-                if(symbolTable.at(i).name == token.value){
+                if(symbolTable.at(i).name == save.value){
                     addr = symbolTable.at(i).addr;
                 }
             }
@@ -554,6 +554,7 @@ void ExpressionP() {
 	if (token.value == "+" || token.value == "-") {
 		NextToken();
 		Term();
+		gen_instr("ADD", 0);
 		ExpressionP();
 	}
 	else Empty();
